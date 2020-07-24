@@ -209,9 +209,9 @@ public class BoardCreator : MonoBehaviour
     {
         int randomIndex = Random.Range(0, prefabs.Length);
 
-        Vector3 position = new Vector3(xCoord, yCoord, 0f);
+        Vector3 position = new Vector3(xCoord, 0f , yCoord);
 
-        GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
+        GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.Euler(90f, 0f, 0f)) as GameObject;
 
         tileInstance.transform.parent = boardHolder.transform;
         //1:01:15
