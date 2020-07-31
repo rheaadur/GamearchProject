@@ -260,6 +260,27 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="BenchmarkUtils">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/BenchmarkUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="GeneralAlgorithms">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/GeneralAlgorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphPlanarityTesting">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/GraphPlanarityTesting.dll</HintPath>
+    </Reference>
+    <Reference Include="MapGeneration">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/MapGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RangeTree">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/RangeTree.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/YamlDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
@@ -644,6 +665,9 @@
     <Reference Include="Unity.Rider.Editor">
       <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Tilemap.Editor">
+      <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/Users/ra596/Downloads/New Unity Project (3)/Tower/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -655,6 +679,26 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{4D9C92C7-9122-6925-4EAF-4BE212FFBB35}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="ProceduralLevelGenerator.Unity.Editor.csproj">
+      <Project>{C7B31ADF-7D6B-CB40-F4C4-E9FF08132ED1}</Project>
+      <Name>ProceduralLevelGenerator.Unity.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="ProceduralLevelGenerator.Unity.csproj">
+      <Project>{300D3C40-54F2-B967-70B8-1E5E23C699E0}</Project>
+      <Name>ProceduralLevelGenerator.Unity</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.2D.Tilemap.Extras.Editor.csproj">
+      <Project>{95EB3D50-36A6-96E8-74B1-0BD2E2F22154}</Project>
+      <Name>Unity.2D.Tilemap.Extras.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="ProceduralLevelGenerator.Unity.Examples.csproj">
+      <Project>{7BB4AB6E-8C69-0C52-40F5-24ADC473F618}</Project>
+      <Name>ProceduralLevelGenerator.Unity.Examples</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.2D.Tilemap.Extras.csproj">
+      <Project>{807FFB8A-5B80-11CE-00B8-D7E397DBAF2D}</Project>
+      <Name>Unity.2D.Tilemap.Extras</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

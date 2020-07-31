@@ -1,53 +1,149 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;        //Allows us to use Lists. 
 
-public class GameManager : MonoBehaviour
+namespace Completed
 {
+    using System.Collections.Generic;       //Allows us to use Lists. 
+    using UnityEngine.UI;                   //Allows us to use UI.
 
-    public static GameManager instance = null;                //Static instance of GameManager which allows it to be accessed by any other script.
-    //private BoardManager boardScript;                        //Store a reference to our BoardManager which will set up the level.
-    private int level = 3;                                    //Current level number, expressed in game as "Day 1".
-
-    //Awake is always called before any Start functions
-    void Awake()
+    public class GameManager : MonoBehaviour
     {
-        //Check if instance already exists
-        if (instance == null)
+        public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
+        public float turnDelay = 0.1f;                            //Delay between each Player turn.//Time to wait before starting level, in seconds.
+        public static GameManager instance = null;                //Static instance of GameManager which allows it to be accessed by any other script.
+        public int fullHealth = 10;
+        [HideInInspector] public bool playersTurn = true;
+        private int level = 1;
+        private List<Enemy> enemies;                            //List of all Enemy units, used to issue them move commands.
+        private bool enemiesMoving;                                //Boolean to check if enemies are moving.//Current level number, expressed in game as "Day 1".
 
-            //if not, set instance to this
-            instance = this;
+        //Awake is always called before any Start functions
+        void Awake()
+        {
+            //Check if instance already exists
+            if (instance == null)
 
-        //If instance already exists and it's not this:
-        else if (instance != this)
+                //if not, set instance to this
+                instance = this;
 
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-            Destroy(gameObject);
+            //If instance already exists and it's not this:
+            else if (instance != this)
 
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+                //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+                Destroy(gameObject);
 
-        //Get a component reference to the attached BoardManager script
-        //boardScript = GetComponent<BoardManager>();
+            //Sets this to not be destroyed when reloading scene
+            DontDestroyOnLoad(gameObject);
 
-        //Call the InitGame function to initialize the first level 
-        InitGame();
-    }
+            //Assign enemies to a new List of Enemy objects.
+            enemies = new List<Enemy>();
 
-    //Initializes the game for each level.
-    void InitGame()
-    {
-        //Call the SetupScene function of the BoardManager script, pass it current level number.
-        //boardScript.SetupScene(level);
+            //Get a component reference to the attached BoardManager script
+            //boardScript = GetComponent<BoardManager>();
 
-    }
+            //Call the InitGame function to initialize the first level 
+            InitGame();
+        }
+
+        //This is called each time a scene is loaded.
+        void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+        {
+            //Add one to our level number.
+            level++;
+            //Call InitGame to initialize our level.
+            InitGame();
+        }
+
+        private void OnEnable()
+        {
+            //Tell our ‘OnLevelFinishedLoading’ function to start listening for a scene change event as soon as this script is enabled.
+            SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        }
+
+        private void OnDisable()
+        {
+            //Tell our ‘OnLevelFinishedLoading’ function to stop listening for a scene change event as soon as this script is disabled. //Remember to always have an unsubscription for every delegate you subscribe to! 
+            SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+        }
+
+        //Initializes the game for each level.
+        void InitGame()
+        {
+
+            //Clear any Enemy objects in our List to prepare for next level.
+            enemies.Clear();
+
+            //Call the SetupScene function of the BoardManager script, pass it current level number.
+            //boardScript.SetupScene(level);
+
+        }
 
 
+        //Update is called every frame.
+        void Update()
+        {
+            //Check that playersTurn or enemiesMoving or doingSetup are not currently true.
+            if (playersTurn || enemiesMoving)
 
-    //Update is called every frame.
-    void Update()
-    {
+                //If any of these are true, return and do not start MoveEnemies.
+                return;
 
+            //Start moving enemies.
+            StartCoroutine(MoveEnemies());
+        }
+
+        //Call this to add the passed in Enemy to the List of Enemy objects.
+        public void AddEnemyToList(Enemy script)
+        {
+            //Add Enemy to List enemies.
+            enemies.Add(script);
+        }
+
+
+        //GameOver is called when the player reaches 0 food points
+        public void GameOver()
+        {
+
+            //Enable black background image gameObject.
+            //levelImage.SetActive(true);
+
+            //Disable this GameManager.
+            enabled = false;
+        }
+
+        //Coroutine to move enemies in sequence.
+        IEnumerator MoveEnemies()
+        {
+            //While enemiesMoving is true player is unable to move.
+            enemiesMoving = true;
+
+            //Wait for turnDelay seconds, defaults to .1 (100 ms).
+            yield return new WaitForSeconds(turnDelay);
+
+            //If there are no enemies spawned (IE in first level):
+            if (enemies.Count == 0)
+            {
+                //Wait for turnDelay seconds between moves, replaces delay caused by enemies moving when there are none.
+                yield return new WaitForSeconds(turnDelay);
+            }
+
+            //Loop through List of Enemy objects.
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                //Call the MoveEnemy function of Enemy at index i in the enemies List.
+                enemies[i].MoveEnemy();
+
+                //Wait for Enemy's moveTime before moving next Enemy, 
+                yield return new WaitForSeconds(enemies[i].moveTime);
+            }
+            //Once Enemies are done moving, set playersTurn to true so player can move.
+            playersTurn = true;
+
+            //Enemies are done moving, set enemiesMoving to false.
+            enemiesMoving = false;
+        }
     }
 }
