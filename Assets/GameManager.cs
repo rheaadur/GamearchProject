@@ -141,9 +141,12 @@ namespace Completed
             }
             //Once Enemies are done moving, set playersTurn to true so player can move.
             playersTurn = true;
+            Debug.Log("playerturn");
+            
 
             //Enemies are done moving, set enemiesMoving to false.
             enemiesMoving = false;
+            Debug.Log("enemyturn");
         }
     }
 }
