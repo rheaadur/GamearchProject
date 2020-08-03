@@ -16,7 +16,8 @@ namespace Completed
         private Transform target;                            //Transform to attempt to move toward each turn.
         private bool skipMove;                                //Boolean to determine whether or not enemy should skip a turn or move this turn.
         public int hp = 8;                            //hit points for the enemy.
-
+        public int min_hp = 8;
+        public int max_hp = 18;
 
         //Start overrides the virtual Start function of the base class.
         protected override void Start()
@@ -24,12 +25,14 @@ namespace Completed
             //Register this enemy with our instance of GameManager by adding it to a list of Enemy objects. 
             //This allows the GameManager to issue movement commands.
             GameManager.instance.AddEnemyToList(this);
-
+           
             //Get and store a reference to the attached Animator component.
             animator = GetComponent<Animator>();
 
             //Find the Player GameObject using it's tag and store a reference to its transform component.
             target = GameObject.FindGameObjectWithTag("Player").transform;
+
+            hp = Random.Range(min_hp, max_hp+1);
 
             //Call the start function of our base class MovingObject.
             base.Start();
@@ -79,7 +82,7 @@ namespace Completed
             AttemptMove<Player>(xDir, yDir);
         }
 
-        //DamageWall is called when the player attacks a wall.
+        //Damage is called when the player attack.
         public void DamageEnemy(int loss)
         {
             //Call the RandomizeSfx function of SoundManager to play one of two chop sounds.
@@ -90,12 +93,20 @@ namespace Completed
 
             //Subtract loss from hit point total.
             hp -= loss;
-            Debug.Log(hp);
+            Debug.Log("HIT");
 
             //If hit points are less than or equal to zero:
             if (hp <= 0)
+            {
+                GameManager.instance.RemoveEnemyFromList(this);
                 //Disable the gameObject.
                 gameObject.SetActive(false);
+                boxCollider.enabled = false;
+                movingMarker.SetActive(false);
+                //GetComponent("Enemy").enabled = false;
+                Debug.Log("ruworking");
+
+            }
         }
 
 
@@ -105,14 +116,11 @@ namespace Completed
         {
             //Declare hitPlayer and set it to equal the encountered component.
             Player hitPlayer = component as Player;
-            Debug.Log("hitplayer");
             //Call the LoseFood function of hitPlayer passing it playerDamage, the amount of foodpoints to be subtracted.
             hitPlayer.LoseHealth(playerDamage);
 
             //Set the attack trigger of animator to trigger Enemy attack animation.
-            animator.SetTrigger("enemyAttack");
-
-            Debug.Log("attack");
+            //animator.SetTrigger("enemyAttack");
 
         }
     }

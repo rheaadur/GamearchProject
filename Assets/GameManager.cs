@@ -19,6 +19,9 @@ namespace Completed
         private int level = 1;
         private List<Enemy> enemies;                            //List of all Enemy units, used to issue them move commands.
         private bool enemiesMoving;                                //Boolean to check if enemies are moving.//Current level number, expressed in game as "Day 1".
+        private int Score = 0;
+        private int dead = 0;
+        private int hearts = 0;
 
         //Awake is always called before any Start functions
         void Awake()
@@ -56,7 +59,12 @@ namespace Completed
             //Call InitGame to initialize our level.
             InitGame();
         }
-
+        public void keepScore()
+        {   
+            Score = + dead;
+            Score=Score*100;
+            Debug.Log(Score);
+        }
         private void OnEnable()
         {
             //Tell our ‘OnLevelFinishedLoading’ function to start listening for a scene change event as soon as this script is enabled.
@@ -100,6 +108,13 @@ namespace Completed
         {
             //Add Enemy to List enemies.
             enemies.Add(script);
+
+        }
+
+        public void RemoveEnemyFromList(Enemy script)
+        {
+            enemies.Remove(script);
+            dead = +1;
         }
 
 
@@ -140,13 +155,12 @@ namespace Completed
                 yield return new WaitForSeconds(enemies[i].moveTime);
             }
             //Once Enemies are done moving, set playersTurn to true so player can move.
-            playersTurn = true;
-            Debug.Log("playerturn");
-            
+            playersTurn = true;           
 
             //Enemies are done moving, set enemiesMoving to false.
             enemiesMoving = false;
-            Debug.Log("enemyturn");
         }
     }
+
+
 }

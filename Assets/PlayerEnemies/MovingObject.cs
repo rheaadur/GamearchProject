@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Completed;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,10 +7,12 @@ public abstract class MovingObject : MonoBehaviour
 {
     public float moveTime = .5f;            //Time it will take object to move, in seconds.
     public LayerMask blockingLayer;            //Layer on which collision will be checked.
-    private BoxCollider2D boxCollider;         //The BoxCollider2D component attached to this object.
+    protected BoxCollider2D boxCollider;         //The BoxCollider2D component attached to this object.
     private Rigidbody2D rb2D;                //The Rigidbody2D component attached to this object.
     private float inverseMoveTime;            //Used to make movement more efficient.
-    private bool isMoving;
+    protected bool isMoving;
+    public GameObject movingMarker;
+    private List <Enemy> dead;
 
     //Protected, virtual functions can be overridden by inheriting classes.
     protected virtual void Start()
@@ -22,12 +25,16 @@ public abstract class MovingObject : MonoBehaviour
 
         //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
         inverseMoveTime = 1f / moveTime;
+
+        //turning the moving marker off
+        movingMarker.SetActive(false);
+        movingMarker.transform.parent = null;
     }
 
 
     //Move returns true if it is able to move and false if not. 
     //Move takes parameters for x direction, y direction and a RaycastHit2D to check collision.
-    protected bool Move(int xDir, int yDir, out RaycastHit2D hit)
+    protected virtual bool Move(int xDir, int yDir, out RaycastHit2D hit)
     {
         //Store start position to move from, based on objects current transform position.
         Vector2 start = transform.position;
@@ -44,11 +51,24 @@ public abstract class MovingObject : MonoBehaviour
         //Re-enable boxCollider after linecast
         boxCollider.enabled = true;
 
+        if (gameObject.name == "Player" && hit.transform != null)
+        {
+            Debug.Log("hit " + (hit.transform != null ? hit.transform.name : "nothing"));
+        }
+
+        
+
         //Check if anything was hit
         if (hit.transform == null && !isMoving)
         {
+            //placing the moving marker
+            movingMarker.SetActive(true);
+            movingMarker.transform.position = new Vector3(end.x, end.y, 0);
+            
             //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
             StartCoroutine(SmoothMovement(end));
+
+            
 
             //Return true to say that Move was successful
             return true;
@@ -84,6 +104,9 @@ public abstract class MovingObject : MonoBehaviour
             //Return and loop until sqrRemainingDistance is close enough to zero to end the function
             yield return null;
         }
+
+        //turning moving marker back off
+        movingMarker.SetActive(false);
 
         //Make sure the object is exactly at the end of its movement.
         rb2D.MovePosition(end);
